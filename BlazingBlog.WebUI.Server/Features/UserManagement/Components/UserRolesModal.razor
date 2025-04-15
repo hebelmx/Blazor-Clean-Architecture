@@ -1,6 +1,6 @@
 ﻿@using BlazorCleanArchitecture.Application.Users.AddRoleToUser
 @using BlazorCleanArchitecture.Application.Users.RemoveRoleFromUser
-@inject ISender Sender
+@inject IRequestBus RequestBus
 @if (ShowModal)
 {
     <div class="fixed inset-0 m-0 flex items-start justify-center bg-white bg-opacity-50">
@@ -57,14 +57,14 @@
     {
         if (!string.IsNullOrWhiteSpace(newRole))
         {
-            await Sender.Send(new AddRoleToUserCommand { UserId = UserId, RoleName = newRole } );
+            await RequestBus.Send(new AddRoleToUserCommand { UserId = UserId, RoleName = newRole } );
             await LoadUserRoles();
             newRole = string.Empty;
         }
     }
     private async Task RemoveRole(string roleName)
     {
-        await Sender.Send(new RemoveRoleFromUserCommand { UserId = UserId, RoleName = roleName });
+        await RequestBus.Send(new RemoveRoleFromUserCommand { UserId = UserId, RoleName = roleName });
         await LoadUserRoles();
     }
     private void CloseModal()
@@ -77,7 +77,7 @@
     {
         if (ShowModal && UserId is not null)
         {
-            Roles = (await Sender.Send(new GetUserRolesQuery { UserId = UserId } )).Value ?? [];
+            Roles = (await RequestBus.Query(new GetUserRolesQuery { UserId = UserId } )).Value ?? [];
         }
     }
 }

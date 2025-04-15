@@ -1,6 +1,6 @@
 ﻿@page "/register"
 @using BlazorCleanArchitecture.Application.Users.RegisterUser
-@inject ISender Sender
+@inject IRequestBus RequestBus
 @inject NavigationManager NavigationManager
 
 <PageTitle>Create Account</PageTitle>
@@ -45,7 +45,7 @@
             UserEmail = UserModel.Email,
             Password = UserModel.Password
         };
-        var result = await Sender.Send(command);
+        var result = await RequestBus.Send(command);
         if (result.Success)
         {
             NavigationManager.NavigateTo("/login");

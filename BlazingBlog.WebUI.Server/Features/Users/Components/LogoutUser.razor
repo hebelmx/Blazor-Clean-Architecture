@@ -1,6 +1,6 @@
 ﻿@page "/logout"
 @using BlazorCleanArchitecture.Application.Users.LogoutUser
-@inject ISender Sender
+@inject IRequestBus RequestBus
 @inject NavigationManager NavigationManager
 
 <h3>Logging out...</h3>
@@ -9,7 +9,7 @@
     protected override async Task OnInitializedAsync()
     {
         var command = new LogoutUserCommand();
-        await Sender.Send(command);
+        await RequestBus.Send(command);
         NavigationManager.NavigateTo("/");
     }
 }

@@ -1,9 +1,10 @@
 ﻿@page "/article-editor"
 @page "/article-editor/{ArticleId:int}"
-@inject ISender Sender
+@inject IRequestBus RequestBus
 @inject NavigationManager NavigationManager
 @attribute [StreamRendering]
 @attribute [Authorize(Roles = "Admin, Writer")]
+@using BlazorCleanArchitecture.Application.Abstractions.RequestHandler
 @using BlazorCleanArchitecture.Application.Articles.GetArticleForEdit
 @using BlazorCleanArchitecture.Infrastructure.Users
 <PageTitle>@PageTitle</PageTitle>
@@ -71,7 +72,7 @@
     {
         if (ArticleId is not null)
         {
-            var result = await Sender.Send(new GetArticleForEditQuery { Id = (int)ArticleId });
+            var result = await RequestBus.Query(new GetArticleForEditQuery { Id = (int)ArticleId });
             if (result.Success)
             {
                 Article ??= result.Value.Adapt<ArticleModel>();
@@ -91,7 +92,7 @@
         if (isEditMode)
         {
             var command = Article.Adapt<UpdateArticleCommand>();
-            var result = await Sender.Send(command);
+            var result = await RequestBus.Send(command);
             if (result.Success)
             {
                 Article = result.Value.Adapt<ArticleModel>();
@@ -104,7 +105,7 @@
         else
         {
             var command = Article.Adapt<CreateArticleCommand>();
-            var result = await Sender.Send(command);
+            var result = await RequestBus.Send(command);
             if (result.Success)
             {
                 NavigationManager.NavigateTo($"/article-editor/{result.Value.Id}");
@@ -122,7 +123,7 @@
             return;
         }
         var command = new DeleteArticleCommand { Id = (int)ArticleId };
-        var result = await Sender.Send(command);
+        var result = await RequestBus.Send(command);
         if (result.Success)
         {
             NavigationManager.NavigateTo("/");

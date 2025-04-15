@@ -1,7 +1,7 @@
 ﻿@page "/users"
 @rendermode @(new InteractiveServerRenderMode(false))
 @attribute [Authorize(Roles = "Admin")]
-@inject ISender Sender
+@inject IRequestBus RequestBus
 
 <PageTitle>Users</PageTitle>
 <h1 class="text-3xl font-extrabold text-gray-100">Registered Users</h1>
@@ -51,7 +51,7 @@
     }
     private async Task LoadUsers()
     {
-        var result = await Sender.Send(new GetUsersQuery());
+        var result = await RequestBus.Query(new GetUsersQuery());
         if (result.Success)
         {
             users = result.Value!;

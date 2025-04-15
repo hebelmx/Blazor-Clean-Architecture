@@ -1,5 +1,5 @@
 ﻿@page "/articles/{ArticleId:int}"
-@inject ISender Sender
+@inject IRequestBus RequestBus
 @attribute [StreamRendering]
 
 <PageTitle>@article.Title</PageTitle>
@@ -35,7 +35,7 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        var result = await Sender.Send(new GetArticleByIdQuery { Id = (int)ArticleId });
+        var result = await RequestBus.Query(new GetArticleByIdQuery { Id = (int)ArticleId });
         if (result.Success && result.Value is not null)
         {
             article = (ArticleDto)result.Value;

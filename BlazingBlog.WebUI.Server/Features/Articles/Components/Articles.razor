@@ -1,8 +1,9 @@
 ﻿@page "/"
+@using BlazorCleanArchitecture.Application.Abstractions.RequestHandler
 @using BlazorCleanArchitecture.Application.Articles
 @using BlazorCleanArchitecture.Application.Articles.GetArticles
-@using MediatR
-@inject ISender Sender
+
+@inject IRequestBus RequestBus
 @attribute [StreamRendering]
 
 <PageTitle>Articles</PageTitle>
@@ -69,7 +70,7 @@
         // await Task.Delay(500);
 
         // Get
-        var result = await Sender.Send(new GetArticlesQuery());
+        var result = await RequestBus.Query(new GetArticlesQuery());
 
         // Set
         if (result.Success)

@@ -1,6 +1,6 @@
 ﻿@page "/login"
 @using BlazorCleanArchitecture.Application.Users.LoginUser
-@inject ISender Sender
+@inject IRequestBus RequestBus
 @inject NavigationManager NavigationManager
 
 <PageTitle>Login</PageTitle>
@@ -34,7 +34,7 @@
             UserName = UserModel.UserName,
             Password = UserModel.Password
         };
-        var result = await Sender.Send(command);
+        var result = await RequestBus.Send(command);
         if (result.Success)
         {
             NavigationManager.NavigateTo("/");
