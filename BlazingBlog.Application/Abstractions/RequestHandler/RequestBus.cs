@@ -6,23 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace BlazorCleanArchitecture.Application.Abstractions.RequestHandler;
-public interface IRequestBus
-{
-    Task<Result> Send(ICommand command, CancellationToken cancellationToken = default);
-    Task<Result<TResponse>> Send<TResponse>(ICommand<TResponse> command, CancellationToken cancellationToken = default);
-    Task<Result<TResponse>> Query<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken = default);
-}
-
-public interface IPipelineBehavior<TRequest, TResponse>
-{
-    Task<TResponse> Handle(
-        TRequest request,
-        RequestHandlerDelegate<TResponse> next,
-        CancellationToken cancellationToken);
-}
-
-public delegate Task<TResponse> RequestHandlerDelegate<TResponse>();
-
 
 public class RequestBus : IRequestBus
 {
